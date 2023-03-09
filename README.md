@@ -52,3 +52,7 @@ You can also move it any directory which is in system path.
 3- install VS Code 
 
 4- Install Plugin in VS Code for Clojure ENV
+
+[Get Started with Clojure in VS Code :](https://www.youtube.com/watch?v=O6GrXXhCzCc)
+
+See how to use the the Calva Extension with its Getting Started Clojure REPL to create your first Clojure program really quickly. Also find out how to use it to teach yourself the basics of Clojure.
