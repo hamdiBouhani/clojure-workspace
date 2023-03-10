@@ -1,0 +1,39 @@
+(ns passmanger.stash
+  (:require [babashka.pods :as pods]))
+
+(def ^{:doc "path to stash file"} stash-file-path "passmanger.stash")
+
+(pods/load-pod 'rorokimdim/stash "0.3.1")
+
+(require '[pod.rorokimdim.stash :as stash])
+
+
+
+(defn stash-init
+  "Initializes stash.
+  If `stash-file-path` does not exist, it will be created."
+  [password]
+
+  (stash/init {"encryption-key" password
+               "stash-path" stash-file-path
+               "create-stash-if-missing" true}))
+
+(defn stash-add
+  "Adds a new node under a parent."
+  [parent-id k v]
+  (stash/add parent-id k v))
+
+(defn add-password [url username password]
+  (stash-add 0 (str url username) password))
+
+(defn stash-nodes
+  "Gets all nodes stored in stash.
+  If a parent-node-id is provided, only nodes with that parent-id are returned."
+  ([] (stash-nodes 0))
+  ([parent-id] (stash/nodes parent-id)))
+
+(comment
+  (stash-nodes)
+  (stash-add 0 "facebook.com" "hamdi")
+  (add-password "facebook.com" "hamdi@test.com" "secret")
+  (stash-init "password"))
