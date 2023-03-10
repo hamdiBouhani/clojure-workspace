@@ -32,8 +32,15 @@
   ([] (stash-nodes 0))
   ([parent-id] (stash/nodes parent-id)))
 
+(defn find-password [url username]
+  (let [nodes (stash-nodes)
+        key (str url username)
+        found-node (first (filter (fn [n]
+                                    (= key (:key n))) nodes))]
+    (:value found-node)))
+
 (comment
   (stash-nodes)
-  (stash-add 0 "facebook.com" "hamdi")
   (add-password "facebook.com" "hamdi@test.com" "secret")
+  (find-password "facebook.com" "hamdi@test.com")
   (stash-init "password"))

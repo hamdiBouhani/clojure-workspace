@@ -20,6 +20,7 @@
                                         [[:unique nil :url :username]]])
                        (sql/format)))))
 
+(create-db!)
 
 (defn insert-password [url username]
   (sqlite3/execute! dbname
@@ -32,10 +33,10 @@
 
 (defn list-passwords []
   (sqlite3/query dbname
-                   (->
-                    (h/select :url :username)
-                    (h/from :passwords)
-                    (sql/format {:pretty true}))))
+                 (->
+                  (h/select :url :username)
+                  (h/from :passwords)
+                  (sql/format {:pretty true}))))
 
 (comment
   (insert-password "facebook.com" "hamdi-pw")
@@ -43,6 +44,25 @@
   (create-db!)
   (fs/exists? dbname))
 
+(comment
+  (list-passwords)
+  (-> (h/select :url :username)
+      (h/from :passwords)
+      (sql/format))
+  (insert-password "facebook.com" "dan@test.com")
+  (-> (h/insert-into :passwords)
+      (h/columns :url :username)
+      (h/values
+       [["facebook.com" "dan@test.com"]])
+      (sql/format {:pretty true}))
+  (create-db!)
+  (fs/exists? dbname)
+  (sqlite/execute! dbname
+                   (-> (h/create-table :password)
+                       (h/with-columns [[:url :text]
+                                        [:username :text]
+                                        [[:unique nil :url :username]]])
+                       (sql/format))))
 
 
 

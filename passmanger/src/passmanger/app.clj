@@ -4,6 +4,7 @@
             [passmanger.db :as db]
             [passmanger.password :refer [generate-password]]
             [passmanger.stash :as stash]
+            [passmanger.clipboard :refer [copy]]
             [table.core :as t]))
 
 ;; Goals
@@ -45,19 +46,16 @@
         url (first (:arguments parsed-options))
         username (second (:arguments parsed-options))
         options (:options parsed-options)]
-    (println parsed-options)
+    ;; (println parsed-options)
     (cond
       (:generate options) (do
 
                             (stash/stash-init (password-input))
-
                             (let [password (generate-password (:length options))]
-
                               (db/insert-password url username)
-
                               (stash/add-password url username password)
-
-                              (println "added password" password)))
+                              (println "Password copied to clipboard")
+                              (copy password)))
 
       (:list options) (t/table (db/list-passwords)))))
 

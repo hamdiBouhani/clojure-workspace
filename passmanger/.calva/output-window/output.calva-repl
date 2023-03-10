@@ -644,3 +644,27 @@ clj꞉passmanger.db꞉> 
 clj꞉passmanger.db꞉> 
 [{:url "facebook.com", :username "hamdi-pw"}]
 clj꞉passmanger.db꞉> 
+[{:key "facebook.comhamdi@test.com",
+  :hvalue
+  "ad5bdf74714125ef9fbad45be53876a2887a2ac7e43f85ff3171c84b9e9a1a19e4d57c9cc56b1f29952d5e6a8fc2354db72e30794485ec163c101c10451f835e",
+  :value "secret",
+  :created "2023-03-10T14:47:03Z",
+  :modified "2023-03-10T14:47:03Z",
+  :id 1,
+  :parent-id 0,
+  :hkey
+  "53e94c959741329f2416d5e4c79cc7dbb740865a43d8d48224958c52897734624243b213cd9ac9e53ad0e5d1fb970018b1d5f532a5c6535a75c1e94583b34be5",
+  :version 1}]
+clj꞉passmanger.stash꞉> 
+#'passmanger.stash/find-password
+clj꞉passmanger.stash꞉> 
+"secret"
+clj꞉passmanger.stash꞉> 
++--------------+----------+
+| url          | username |
++--------------+----------+
+| facebook.com | hamdi-pw |
+| fb.com       | test-pw  |
++--------------+----------+
+nil
+clj꞉passmanger.app꞉> 
