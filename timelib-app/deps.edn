@@ -1,0 +1,5 @@
+{:deps
+ {clojure.java-time/clojure.java-time {:mvn/version "1.2.0"}}
+ :aliases
+ {:build {:deps {io.github.clojure/tools.build {:git/tag "v0.9.4" :git/sha "76b78fe"}}
+          :ns-default build}}}

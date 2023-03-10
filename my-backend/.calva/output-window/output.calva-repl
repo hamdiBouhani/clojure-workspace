@@ -10,7 +10,7 @@
 ; "calva.autoSelectReplConnectProjectType": "deps.edn"
 ;   - See https://calva.io/connect/#auto-select-project-type
 ; 
-; Starting Jack-in Terminal: java -jar '/home/hamdi/.vscode/extensions/betterthantomorrow.calva-2.0.335/deps.clj.jar' -Sdeps '{:deps {nrepl/nrepl {:mvn/version,"1.0.0"},cider/cider-nrepl {:mvn/version,"0.28.5"}}}' -M -m nrepl.cmdline --middleware "[cider.nrepl/cider-middleware]"
+; Starting Jack-in Terminal: clojure -Sdeps '{:deps {nrepl/nrepl {:mvn/version,"1.0.0"},cider/cider-nrepl {:mvn/version,"0.28.5"}}}' -M -m nrepl.cmdline --middleware "[cider.nrepl/cider-middleware]"
 ; Hooking up nREPL sessions...
 ; Connected session: clj
 ; TIPS:
@@ -24,161 +24,9 @@ clj꞉user꞉>  ; Use `alt+enter` to evaluate
 ; Jack-in done.
 clj꞉user꞉> 
 nil
-clj꞉my-backend.core꞉> 
-#'my-backend.core/server
-clj꞉my-backend.core꞉> 
-#'my-backend.core/handler
-clj꞉my-backend.core꞉> 
-#'my-backend.core/-main
-clj꞉my-backend.core꞉> 
-; Jacking in...
-; Connecting using "deps.edn" project type.
-; You can make Calva auto-select this:
-; "calva.autoSelectReplConnectProjectType": "deps.edn"
-;   - See https://calva.io/connect/#auto-select-project-type
-; 
-; nREPL Connection was closed
-; Starting Jack-in Terminal: java -jar '/home/hamdi/.vscode/extensions/betterthantomorrow.calva-2.0.335/deps.clj.jar' -Sdeps '{:deps {nrepl/nrepl {:mvn/version,"1.0.0"},cider/cider-nrepl {:mvn/version,"0.28.5"}}}' -M -m nrepl.cmdline --middleware "[cider.nrepl/cider-middleware]"
-; Hooking up nREPL sessions...
-; Connected session: clj
-; TIPS:
-;   - You can edit the contents here. Use it as a REPL if you like.
-;   - `alt+enter` evaluates the current top level form.
-;   - `ctrl+enter` evaluates the current form.
-;   - `alt+up` and `alt+down` traverse up and down the REPL command history
-;      when the cursor is after the last contents at the prompt
-;   - Clojure lines in stack traces are peekable and clickable.
-clj꞉user꞉> 
-; Jack-in done.
-clj꞉user꞉> 
-; Syntax error compiling at (src/my-backend/core.clj:18:1).
-; Unable to resolve symbol: -main in this context
-clj꞉my-backend.core꞉> 
-nil
-clj꞉my-backend.core꞉> 
-#'my-backend.core/server
-clj꞉my-backend.core꞉> 
-#'my-backend.core/handler
-clj꞉my-backend.core꞉> 
-#'my-backend.core/-main
-clj꞉my-backend.core꞉> 
-#object[org.eclipse.jetty.server.Server 0x24612f75 "Server@24612f75{STARTED}[9.4.42.v20210604]"]
-clj꞉my-backend.core꞉> 
-; Jacking in...
-; Connecting using "deps.edn" project type.
-; You can make Calva auto-select this:
-; "calva.autoSelectReplConnectProjectType": "deps.edn"
-;   - See https://calva.io/connect/#auto-select-project-type
-; 
-; nREPL Connection was closed
-; Starting Jack-in Terminal: java -jar '/home/hamdi/.vscode/extensions/betterthantomorrow.calva-2.0.335/deps.clj.jar' -Sdeps '{:deps {nrepl/nrepl {:mvn/version,"1.0.0"},cider/cider-nrepl {:mvn/version,"0.28.5"}}}' -M -m nrepl.cmdline --middleware "[cider.nrepl/cider-middleware]"
-; Hooking up nREPL sessions...
-; Connected session: clj
-; TIPS:
-;   - You can edit the contents here. Use it as a REPL if you like.
-;   - `alt+enter` evaluates the current top level form.
-;   - `ctrl+enter` evaluates the current form.
-;   - `alt+up` and `alt+down` traverse up and down the REPL command history
-;      when the cursor is after the last contents at the prompt
-;   - Clojure lines in stack traces are peekable and clickable.
-clj꞉user꞉> 
-; Jack-in done.
-clj꞉user꞉> 
-nil
-clj꞉my-backend.core꞉> 
-#'my-backend.core/server
-clj꞉my-backend.core꞉> 
-#'my-backend.core/handler
-clj꞉my-backend.core꞉> 
-#'my-backend.core/wrap-defaults
-clj꞉my-backend.core꞉> 
-#'my-backend.core/start-jetty!
-clj꞉my-backend.core꞉> 
-#'my-backend.core/stop-jetty!
-clj꞉my-backend.core꞉> 
-#'my-backend.core/-main
-clj꞉my-backend.core꞉> 
-#function[my-backend.core/start-jetty!]
-clj꞉my-backend.core꞉> 
-; Execution error (IllegalArgumentException) at my-backend.core/stop-jetty! (REPL:21).
-; No matching field found: stop for class my_backend.core$start_jetty_BANG_
-clj꞉my-backend.core꞉> 
-#'my-backend.core/stop-jetty!
-clj꞉my-backend.core꞉> 
-#'my-backend.core/-main
-clj꞉my-backend.core꞉> 
-#function[my-backend.core/start-jetty!]
-clj꞉my-backend.core꞉> 
-; Execution error (IllegalArgumentException) at my-backend.core/stop-jetty! (REPL:21).
-; No matching field found: stop for class my_backend.core$start_jetty_BANG_
-clj꞉my-backend.core꞉> 
-; nREPL Connection was closed
-; Jacking in...
-; Connecting using "deps.edn" project type.
-; You can make Calva auto-select this:
-; "calva.autoSelectReplConnectProjectType": "deps.edn"
-;   - See https://calva.io/connect/#auto-select-project-type
-; 
-; Starting Jack-in Terminal: java -jar '/home/hamdi/.vscode/extensions/betterthantomorrow.calva-2.0.335/deps.clj.jar' -Sdeps '{:deps {nrepl/nrepl {:mvn/version,"1.0.0"},cider/cider-nrepl {:mvn/version,"0.28.5"}}}' -M -m nrepl.cmdline --middleware "[cider.nrepl/cider-middleware]"
-; Hooking up nREPL sessions...
-; Connected session: clj
-; TIPS:
-;   - You can edit the contents here. Use it as a REPL if you like.
-;   - `alt+enter` evaluates the current top level form.
-;   - `ctrl+enter` evaluates the current form.
-;   - `alt+up` and `alt+down` traverse up and down the REPL command history
-;      when the cursor is after the last contents at the prompt
-;   - Clojure lines in stack traces are peekable and clickable.
-clj꞉user꞉> 
-; Jack-in done.
-clj꞉user꞉> 
-nil
-clj꞉my-backend.core꞉> 
-#'my-backend.core/server
-clj꞉my-backend.core꞉> 
-#'my-backend.core/handler
-clj꞉my-backend.core꞉> 
-#'my-backend.core/wrap-defaults
-clj꞉my-backend.core꞉> 
-#'my-backend.core/start-jetty!
-clj꞉my-backend.core꞉> 
-#'my-backend.core/stop-jetty!
-clj꞉my-backend.core꞉> 
-#'my-backend.core/start-jetty!
-clj꞉my-backend.core꞉> 
-#'my-backend.core/-main
-clj꞉my-backend.core꞉> 
-nil
 ; WARNING: abs already refers to: #'clojure.core/abs in namespace: medley.core, being replaced by: #'medley.core/abs
 clj꞉my-backend.core꞉> 
-nil
-clj꞉my-backend.core꞉> 
-#'my-backend.core/handler
-clj꞉my-backend.core꞉> 
-#'my-backend.core/wrap-defaults
-clj꞉my-backend.core꞉> 
-#'my-backend.core/-main
-clj꞉my-backend.core꞉> 
-#'my-backend.core/start-jetty!
-clj꞉my-backend.core꞉> 
-nil
-clj꞉my-backend.core꞉> 
-nil
-clj꞉my-backend.core꞉> 
-nil
-clj꞉my-backend.core꞉> 
-#'my-backend.core/routes
-clj꞉my-backend.core꞉> 
-#'my-backend.core/handler
-clj꞉my-backend.core꞉> 
-#'my-backend.core/start-jetty!
-clj꞉my-backend.core꞉> 
-; Execution error (ArityException) at my-backend.core/start-jetty! (REPL:31).
-; Wrong number of args (0) passed to: clojure.lang.PersistentArrayMap
-clj꞉my-backend.core꞉> 
-nil
-clj꞉my-backend.core꞉> 
-nil
+#'my-backend.core/server
 clj꞉my-backend.core꞉> 
 #'my-backend.core/routes
 clj꞉my-backend.core꞉> 
@@ -188,30 +36,6 @@ clj꞉my-backend.core꞉> 
 clj꞉my-backend.core꞉> 
 #'my-backend.core/-main
 clj꞉my-backend.core꞉> 
-; Execution error (ArityException) at my-backend.core/start-jetty! (REPL:31).
-; Wrong number of args (0) passed to: clojure.lang.PersistentArrayMap
+#object[org.eclipse.jetty.server.Server 0x65a1fcc3 "Server@65a1fcc3{STARTED}[9.4.42.v20210604]"]
 clj꞉my-backend.core꞉> 
-nil
-clj꞉my-backend.core꞉> 
-nil
-clj꞉my-backend.core꞉> 
-#'my-backend.core/routes
-clj꞉my-backend.core꞉> 
-#'my-backend.core/handler
-clj꞉my-backend.core꞉> 
-#'my-backend.core/start-jetty!
-clj꞉my-backend.core꞉> 
-#'my-backend.core/-main
-clj꞉my-backend.core꞉> 
-#object[org.eclipse.jetty.server.Server 0x4261cf41 "Server@4261cf41{STARTED}[9.4.42.v20210604]"]
-clj꞉my-backend.core꞉> 
-; Execution error (BindException) at sun.nio.ch.Net/bind0 (Net.java:-2).
-; Address already in use
-clj꞉my-backend.core꞉> 
-#'my-backend.core/stop-jetty!
-clj꞉my-backend.core꞉> 
-#'my-backend.core/-main
-clj꞉my-backend.core꞉> 
-; Execution error (BindException) at sun.nio.ch.Net/bind0 (Net.java:-2).
-; Address already in use
-clj꞉my-backend.core꞉> 
+; nREPL Connection was closed
