@@ -1,0 +1,1 @@
+https://docs.xtdb.com/administration/installing/

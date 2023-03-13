@@ -1,0 +1,177 @@
+; This is the Calva evaluation results output window.
+; TIPS: The keyboard shortcut `ctrl+alt+o o` shows and focuses this window
+;   when connected to a REPL session.
+; Please see https://calva.io/output/ for more info.
+; Happy coding! ♥️
+
+; Jacking in...
+; Connecting using "Leiningen" project type.
+; You can make Calva auto-select this.
+;   - See https://calva.io/connect-sequences/
+; 
+; Starting Jack-in Terminal: lein update-in :dependencies conj '[nrepl,"1.0.0"]' -- update-in :plugins conj '[cider/cider-nrepl,"0.28.5"]' -- update-in '[:repl-options,:nrepl-middleware]' conj '["cider.nrepl/cider-middleware"]' -- repl :headless
+; Using host:port 127.0.0.1:42233 ...
+; Hooking up nREPL sessions ...
+; Connected session: clj
+; TIPS:
+;   - You can edit the contents here. Use it as a REPL if you like.
+;   - `alt+enter` evaluates the current top level form.
+;   - `ctrl+enter` evaluates the current form.
+;   - `alt+up` and `alt+down` traverse up and down the REPL command history
+;      when the cursor is after the last contents at the prompt
+;   - Clojure lines in stack traces are peekable and clickable.
+clj꞉scratch.core꞉>  ; Use `alt+enter` to evaluate
+; Jack-in done.
+clj꞉scratch.core꞉> 
+nil
+clj꞉scratch.core꞉> 
+3
+clj꞉scratch.core꞉> 
+; Syntax error compiling at (src/scratch/core.clj:16:3).
+; Unable to resolve symbol: say-hi in this context
+clj꞉scratch.core꞉> 
+#'scratch.core/say-hi
+clj꞉scratch.core꞉> 
+hi
+nil
+clj꞉scratch.core꞉> 
+#'scratch.core/wrap-identity
+clj꞉scratch.core꞉> 
+hi
+nil
+clj꞉scratch.core꞉> 
+#'scratch.core/wrap-once
+clj꞉scratch.core꞉> 
+#'scratch.core/say-hi
+clj꞉scratch.core꞉> 
+#'scratch.core/wrap-identity
+clj꞉scratch.core꞉> 
+hello
+nil
+clj꞉scratch.core꞉> 
+#'scratch.core/wrap-once
+clj꞉scratch.core꞉> 
+hello
+nil
+clj꞉scratch.core꞉> 
+hello
+hello
+hello
+[nil nil nil]
+clj꞉scratch.core꞉> 
+#'scratch.core/wrap-once
+clj꞉scratch.core꞉> 
+---
+hello
+[{:okay nil} nil nil]
+clj꞉scratch.core꞉> 
+---
+hello
+[{:okay nil} nil nil nil nil nil]
+clj꞉scratch.core꞉> 
+#'scratch.core/say-hi
+clj꞉scratch.core꞉> 
+#'scratch.core/wrap-identity
+clj꞉scratch.core꞉> 
+#'scratch.core/wrap-once
+clj꞉scratch.core꞉> 
+#'scratch.core/say-hi
+clj꞉scratch.core꞉> 
+hello, Steve
+nil
+clj꞉scratch.core꞉> 
+#'scratch.core/say-hi
+clj꞉scratch.core꞉> 
+hello, Steve
+"hello, Steve"
+clj꞉scratch.core꞉> 
+#'scratch.core/say-hi
+clj꞉scratch.core꞉> 
+#'scratch.core/wrap-once
+clj꞉scratch.core꞉> 
+---
+hello, Steve
+[{:okay "hello, Steve"} nil nil nil nil nil]
+clj꞉scratch.core꞉> 
+---
+hello, Steve
+[{:okay "hello, Steve"} #<Future@2467719d: nil> nil #<Future@64857d42: nil> nil nil]
+clj꞉scratch.core꞉> 
+; Syntax error macroexpanding clojure.core/fn at (src/scratch/core.clj:66:3).
+; "" - failed: vector? at: [:fn-tail :arity-1 :params] spec: :clojure.core.specs.alpha/param-list
+; "" - failed: (or (nil? %) (sequential? %)) at: [:fn-tail :arity-n] spec: :clojure.core.specs.alpha/params+body
+clj꞉scratch.core꞉> 
+#'scratch.core/say-hi
+clj꞉scratch.core꞉> 
+; Syntax error macroexpanding clojure.core/fn at (src/scratch/core.clj:66:3).
+; "" - failed: vector? at: [:fn-tail :arity-1 :params] spec: :clojure.core.specs.alpha/param-list
+; "" - failed: (or (nil? %) (sequential? %)) at: [:fn-tail :arity-n] spec: :clojure.core.specs.alpha/params+body
+clj꞉scratch.core꞉> 
+; Syntax error macroexpanding clojure.core/fn at (src/scratch/core.clj:66:3).
+; "" - failed: vector? at: [:fn-tail :arity-1 :params] spec: :clojure.core.specs.alpha/param-list
+; "" - failed: (or (nil? %) (sequential? %)) at: [:fn-tail :arity-n] spec: :clojure.core.specs.alpha/params+body
+clj꞉scratch.core꞉> 
+#'scratch.core/wrap_once-in_a_while
+clj꞉scratch.core꞉> 
+#function[scratch.core/wrap-once-in-a-while/wrapper-fn--7935]
+clj꞉scratch.core꞉> 
+hello, Steve
+"hello, Steve"
+clj꞉scratch.core꞉> 
+---
+hello, 1
+hello, 2
+hello, 3
+["hello, 1" "hello, 2" "hello, 3"]
+clj꞉scratch.core꞉> 
+1678704386230
+clj꞉scratch.core꞉> 
+#function[clojure.core/partial/fn--5908]
+clj꞉scratch.core꞉> 
+; Syntax error compiling at (src/scratch/core.clj:86:5).
+; Unable to resolve symbol: pwf in this context
+clj꞉scratch.core꞉> 
+; Execution error (ArityException) at scratch.core/eval7949 (form-init4705788916596394250.clj:86).
+; Wrong number of args (3) passed to: scratch.core/wrap-once-in-a-while
+clj꞉scratch.core꞉> 
+hello, Steve
+; Execution error (ArityException) at scratch.core/eval7951 (form-init4705788916596394250.clj:86).
+; Wrong number of args (2) passed to: scratch.core/wrap-once-in-a-while
+clj꞉scratch.core꞉> 
+; Syntax error compiling at (src/scratch/core.clj:83:30).
+; Unable to resolve symbol: f in this context
+clj꞉scratch.core꞉> 
+#'scratch.core/wrap_once-in_a_while
+clj꞉scratch.core꞉> 
+---
+; Execution error (ClassCastException) at scratch.core$wrap_once_in_a_while$warpper__7954/doInvoke (form-init4705788916596394250.clj:107).
+; class scratch.core$say_hi cannot be cast to class java.lang.Number (scratch.core$say_hi is in unnamed module of loader clojure.lang.DynamicClassLoader @3b8887cf; java.lang.Number is in module java.base of loader 'bootstrap')
+clj꞉scratch.core꞉> 
+#'scratch.core/wrap_once-in_a_while
+clj꞉scratch.core꞉> 
+; Execution error (ClassCastException) at scratch.core$wrap_once_in_a_while$warpper__7961/doInvoke (form-init4705788916596394250.clj:107).
+; class scratch.core$say_hi cannot be cast to class java.lang.Number (scratch.core$say_hi is in unnamed module of loader clojure.lang.DynamicClassLoader @3b8887cf; java.lang.Number is in module java.base of loader 'bootstrap')
+clj꞉scratch.core꞉> 
+#'scratch.core/say-hi
+clj꞉scratch.core꞉> 
+#'scratch.core/wrap_once-in_a_while
+clj꞉scratch.core꞉> 
+---
+; Execution error (ClassCastException) at scratch.core$wrap_once_in_a_while$warpper__7969/doInvoke (form-init4705788916596394250.clj:107).
+; class scratch.core$say_hi cannot be cast to class java.lang.Number (scratch.core$say_hi is in unnamed module of loader clojure.lang.DynamicClassLoader @29f036f0; java.lang.Number is in module java.base of loader 'bootstrap')
+clj꞉scratch.core꞉> 
+; Execution error (ArityException) at scratch.core/eval7976 (form-init4705788916596394250.clj:127).
+; Wrong number of args (3) passed to: scratch.core/wrap-once-in-a-while
+clj꞉scratch.core꞉> 
+---
+; Execution error (ClassCastException) at scratch.core$wrap_once_in_a_while$warpper__7969/doInvoke (form-init4705788916596394250.clj:107).
+; class scratch.core$say_hi cannot be cast to class java.lang.Number (scratch.core$say_hi is in unnamed module of loader clojure.lang.DynamicClassLoader @29f036f0; java.lang.Number is in module java.base of loader 'bootstrap')
+clj꞉scratch.core꞉> 
+---
+; Execution error (ClassCastException) at scratch.core$wrap_once_in_a_while$warpper__7969/doInvoke (form-init4705788916596394250.clj:107).
+; class scratch.core$say_hi cannot be cast to class java.lang.Number (scratch.core$say_hi is in unnamed module of loader clojure.lang.DynamicClassLoader @29f036f0; java.lang.Number is in module java.base of loader 'bootstrap')
+clj꞉scratch.core꞉> 
+---
+hello, 1
+[{:okay "hello, 1"} nil nil]
+clj꞉scratch.core꞉> 

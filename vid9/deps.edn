@@ -1,0 +1,4 @@
+{:paths ["src"]
+ :deps {com.xtdb/xtdb-core {:mvn/version "1.23.1"}
+        com.xtdb/xtdb-jdbc {:mvn/version "1.23.0"}
+        mysql/mysql-connector-java {:mvn/version "8.0.23"}}}
