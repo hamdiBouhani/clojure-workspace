@@ -1,2 +1,6 @@
-*.cpcache
-*.lsp/
+.clj-kondo/
+.lsp/
+.calva/
+*/.cpcache/
+*/.lsp/
+*/.calva/
