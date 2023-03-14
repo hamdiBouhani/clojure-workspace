@@ -1,16 +1,17 @@
 (ns shorturl.db
   (:require [clojure.java.jdbc :as j]
             [honey.sql :as sql]
-            [honey.sql.helpers :refer :all]))
+            [honey.sql.helpers :refer :all]
+            [shorturl.env :refer [env]]))
 
 
 ;; https://github.com/clojure/java.jdbc
 ;; https://github.com/seancorfield/honeysql
 
-(def mysql-db {:dbtype "mysql"
-               :dbname "shorturl"
-               :user "root"
-               :password "password"})
+(def mysql-db {:dbtype (env :DBTYPE)
+               :dbname (env :DBNAME)
+               :user (env :USER)
+               :password (env :PASSWORD)})
 
 (defn query [q]
   (j/query mysql-db  q))
@@ -45,7 +46,7 @@
 
 
 (comment
-
+(println mysql-db)
 ;;   (defn create-tables []
 ;;     (j/query mysql-db
 ;;              ["CREATE TABLE IF NOT EXISTS redirects (
@@ -54,6 +55,8 @@
 ;;               long VARCHAR(255) NOT NULL,
 ;;               PRIMARY KEY (id)
 ;;             )"]))
+  
+  (env :DBTYPE)
 
   (query (-> (select :*)
              (from :redirects)
