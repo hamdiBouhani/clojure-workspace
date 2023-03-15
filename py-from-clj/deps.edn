@@ -1,2 +1,3 @@
 {:paths ["src"]
- :deps {clj-python/libpython-clj {:mvn/version "2.024"}}}
+ :deps {clj-python/libpython-clj {:mvn/version "2.024"}
+        techascent/tech.io {:mvn/version "4.28"}}}
