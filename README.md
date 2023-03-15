@@ -2,63 +2,255 @@
 repository for testing the Clojure programming language
 
 
+# Projects :
 
-## Clojure Tutorial 
-### Getting Started with Clojure 
-[How To Setup The Environment with VS Code](https://www.youtube.com/watch?v=WY4Yc03g-gU)
+## clj-new:
 
-1- Install OpenJDK
+It's simple commend line applications that create a password generator using Clojure.
 
-2- Install Leingen Environment 
+In this project, I used [clj-new](https://github.com/seancorfield/clj-new) to create a new project.
 
-* [Leingen:](https://leiningen.org/)
+`clj-new` Generate new projects from Leiningen or Boot templates, or clj-template projects, using just the clojure command-line installation of Clojure!
 
-Leiningen is the easiest way to use Clojure. With a focus on project automation and declarative configuration, it gets out of your way and lets you focus on your code.
+## clj-template:
+It's template project i download to get an ideas on the structure of clojure projects
 
-* [Leingen Tutorial](https://codeberg.org/leiningen/leiningen/src/branch/stable/doc/TUTORIAL.md)
 
-Leiningen is for automating Clojure projects without setting your hair on fire. If you experience your hair catching on fire or any other frustrations while following this tutorial, please let us know.
+## clj-tuto:
+It's simple test  project to add testing  using `test-runner` and  how to add `spec` testing lib in clojure project.
 
-It offers various project-related tasks and can:
+```clojure
+{:deps
+ {org.clojure/core.async {:mvn/version "1.3.610"}
+  speclj/speclj {:mvn/version "3.4.3"}
+  toucan/toucan {:mvn/version "1.18.0"}}
 
-- create new projects
-- fetch dependencies for your project
-- run tests
-- run a fully-configured REPL
-- compile Java sources (if any)
-- run the project (if the project isn't a library)
-- generate a maven-style "pom" file for the project for interop
-- compile and package projects for deployment
-- publish libraries to repositories such as Clojars
-- run custom automation tasks written in Clojure (leiningen plug-ins)
-
-On ubuntu, its quite easy. Download executable file, make it executable and place it in system path.
-
-[Installing leiningen 2 on Ubuntu](https://stackoverflow.com/questions/25838169/installing-leiningen-2-on-ubuntu)
-
-```
-    $ wget https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein
-    $ chmod +x lein
-    $ sudo mv lein /usr/local/bin
+ :aliases
+ {:test {:extra-paths ["test" "test/tuto"]
+         :extra-deps {io.github.cognitect-labs/test-runner {:git/tag "v0.5.1" :git/sha "dfb30dd"}}
+         :main-opts ["-m" "cognitect.test-runner"]
+         :exec-fn cognitect.test-runner.api/test}}}
 ```
 
-You can also move it any directory which is in system path.
-
-  ```
-    $ lein -v
-    Leiningen 2.6.1 on Java 1.8.0_77 Java HotSpot(TM) 64-Bit Server VM
-  ```
-
-3- install VS Code 
-
-4- Install Plugin in VS Code for Clojure ENV
-
-[Get Started with Clojure in VS Code :](https://www.youtube.com/watch?v=O6GrXXhCzCc)
-
-See how to use the the Calva Extension with its Getting Started Clojure REPL to create your first Clojure program really quickly. Also find out how to use it to teach yourself the basics of Clojure.
+```clojure
+  (ns tuto.core_spec
+    (:require [speclj.core :refer [describe it should should= should-not run-specs]]
+              [tuto.core :refer :all]))
 
 
-# Creating a Project:
+  ;; https://github.com/slagyr/speclj
+
+  (describe "my-reduce"
+            (it "should reduce a collection"
+                (should= 1 (reduce + 1 '()))))
+
+  (describe "Truth"
+            (it "is true"
+                (should true))
+            (it "is not false"
+                (should-not false)))
+
+  (run-specs)
+
+```
+
+## core-async:
+
+in this project, I try to understand to how core-async work.
+
+```clojure
+(ns core
+  (:require
+   [clojure.core.async :refer [chan >!! <!! thread put! take! go >! <! go-loop]]
+   [hato.client :as hc]
+   [clojure.data.json :as j]))
+
+
+
+(let [c (chan 10)]
+  (thread (doseq [i (range 10)]
+            (println "putting in channel c" i)
+            (>!! c i)))
+  (thread (doseq [i (range 10)]
+            (println "getting from channel c" (<!! c)))))
+
+(let [c (chan)
+      data "data !!!"]
+  (thread (put! c data (fn [x] (println "putting" x))))
+  (thread (take! c (fn [x] (println "getting" x)))))
+
+
+;; gorountine
+(let [c (chan)]
+  (go (doseq [i (range 10)]
+        (println "putting in channel c" i)
+        (>! c i)))
+  (go (doseq [i (range 10)]
+        (println "getting from channel c" (<! c)))))
+
+(comment
+  (doseq [i (range 10)]
+    (println "putting" i)))
+
+
+;; practical example
+
+;; (defn get-user [id]
+;;   (let [url (str "https://reqres.in/api/users/" id)]
+;;     (hc/get url)))
+
+
+(defn get-user [id]
+  (let [url (str "https://reqres.in/api/users/" id)
+        data (get (-> (hc/get url)
+                      :body
+                      j/read-json) :data)]
+    data))
+
+(defn send-email [email]
+  (Thread/sleep 2000)
+  (println "sending email to" email))
+
+(defn notify-user [id]
+  (let [user (get-user id)
+        email (get user :email)]
+    (send-email email)))
+
+(defn process-users []
+  (let [c (chan)]
+
+    (thread (doseq [i (range 1 5)]
+              (println "putting in channel c user" i)
+              (>!! c (get-user i))))
+
+    (thread (loop []
+              (when-some [user (<!! c)]
+                (println user)
+                (send-email (get user :email)))
+              (recur)))))
+
+
+
+(defn process-users-go []
+  (let [c (chan)]
+
+    (go (doseq [i (range 1 5)]
+          (>! c (get-user i))))
+
+    (go-loop []
+      (when-some [user (<! c)]
+        (send-email (get user :email)))
+      (recur))))
+
+(comment
+  (def test-url "https://reqres.in/api/users/2")
+
+
+  (hc/get test-url)
+
+  (-> (hc/get test-url)
+      :body)
+
+  (get-user 2)
+  (send-email "hamdi@test.com")
+  (notify-user 2)
+  (process-users)
+  (process-users-go))
+
+```
+
+## multi-methods:
+
+in this project, I try to understand how multi-methods concept 
+
+```clojure
+(ns multi-methods.core)
+
+
+(def user1 {:name "John" :contact-method "sms"})
+(def user2 {:name "Mark" :contact-method "phone"})
+(def user3 {:name "Travis" :contact-method "email"})
+
+(defn sms-user [user]
+  (str "Sending SMS to" (:name user)))
+
+(defn email-user [user]
+  (str "Sending email to" (:name user)))
+
+(defn phone-user [user]
+  (str "Phoning" (:name user)))
+
+;; (defn dispatch-notify-function [user]
+;;   (case (:contact-method user)
+;;     "sms" sms-user
+;;     "email" email-user
+;;     "phone" phone-user)
+
+
+
+(defmulti notify-user :contact-method)
+(defmethod notify-user "sms" [user] (sms-user user))
+(defmethod notify-user "phone" [user] (phone-user user))
+(defmethod notify-user :default [user] (email-user user))
+
+(notify-user user1)
+(notify-user user2)
+```
+
+
+## my-backend:
+
+in this project, I tried to implement small micro-service using jetty.
+
+```clojure
+(ns my-backend.core
+  (:require
+   [compojure.core :as c]
+   [compojure.route :as route]
+   [ring.adapter.jetty :as jetty]
+   [ring.middleware.defaults :as ring-defaults])
+  (:gen-class))
+
+(defonce server (atom nil))
+
+(defn routes []
+  (c/routes
+   (c/GET "/" [] {:status 200
+                  :body "OK!!!"})
+   (c/GET "/hello" [] {:status 200
+                       :body "Hello World!!!"})
+   (c/GET "/hello/:name" [name] {:status 200
+                                 :body (str "Hello " name "!!!")})))
+
+(defn handler [req]
+  ((routes) req))
+
+;; (defn wrap-defaults [handler]
+;;   (ring-defaults/wrap-defaults handler ring-defaults/site-defaults))
+
+(defn start-jetty! []
+  (reset!
+   server
+   (jetty/run-jetty (ring-defaults/wrap-defaults
+                     #'handler
+                     ring-defaults/site-defaults) {:join? false
+                                                   :port 3000})))
+
+(defn stop-jetty! []
+  (.stop @server)
+  (reset! server nil))
+
+(defn -main [& args]
+  (start-jetty!))
+
+(-main)
+
+#_(start-jetty!)
+```
+
+## my-stuff:
+In this project, I tried to create project using lein new.
+
 ```
 $ lein new app my-stuff
 ```
@@ -87,270 +279,216 @@ my-stuff/
 └── README.md
 ```
 
-In this example we're using the app template, which is intended for an application project rather than a library. Omitting the app argument will use the default template, which is suitable for libraries.
+## passmanger:
+In this project, I tried to create  small password manger using [Basbashka](https://book.babashka.org/) environment.
 
+`Babashka` is a scripting environment made with `Clojure`, compiled to native with `GraalVM`. The primary benefits of using babashka for scripting compared to the JVM are fast startup time and low memory consumption. 
 
-## Directory Layout
+Babashka comes with batteries included and packs libraries like clojure.tools.cli for parsing command line arguments and cheshire for working with JSON. Moreover, it can be installed just by downloading a self-contained binary.
 
-Here we've got your project's README, a `src/` directory containing the code, a `test/` directory, and a `project.clj` file which describes your project to Leiningen. The `src/my_stuff/core.clj` file corresponds to the `my-stuff.core` namespace.
+## py-from-clj:
+in this project, I tried to call python lib for clojure following this [artical](https://gigasquidsoftware.com/blog/2021/03/15/breakfast-with-zero-shot-nlp/)
 
-## Filename-to-Namespace Mapping Convention:
-
-Note that we use `my-stuff.core` instead of just my-stuff since single-segment namespaces are discouraged in Clojure as using those would imply classes are being assigned to the default (no-name) package.
-
-Also note that if a Clojure namespaces segment contains a dash `(-)`, the corresponding `path/filename` will contain an underscore (_) instead. This is due to the fact that Java disallows dashes in identifiers, in particular in package and class names. A Clojure "dash-adorned" namespace identifier is thus mapped to a Java-compatible "underscore-adorned" package identifier. This change is reflected in pathnames as these must match the package and class names.
-
-## project.clj:
-
-Your `project.clj` file will start off looking something like this:
+that tries to call `numpy` `pytorch` `transformers` `lime` from clojure code
 
 ```clojure
-(defproject my-stuff "0.1.0-SNAPSHOT"
-  :description "FIXME: write description"
-  :url "http://example.com/FIXME"
-  :license {:name "EPL-2.0 OR GPL-2.0-or-later WITH Classpath-exception-2.0"
-            :url "https://www.eclipse.org/legal/epl-2.0/"}
-  :dependencies [[org.clojure/clojure "1.11.1"]]
-  :main ^:skip-aot my-stuff.core
-  :target-path "target/%s"
-  :profiles {:uberjar {:aot :all
-                       :jvm-opts ["-Dclojure.compiler.direct-linking=true"]}})
+(ns clj.core
+  (:require
+   [libpython-clj2.python :as py]
+   [libpython-clj2.require :refer [require-python]]))
 
+
+
+
+;; Next we will need to install the required python deps:
+;; pip install numpy torch transformers lime
+(require-python '[transformers :bind-ns :as py-transformers])
+
+;;https://huggingface.co/tasks/zero-shot-classification#:~:text=Zero%2Dshot%20text%20classification%20is,examples%20from%20previously%20unseen%20classes.
+(def classifier (py/py. py-transformers "pipeline" "zero-shot-classification"))
+
+(def text "French Toast with egg and bacon in the center with maple syrup on top. Sprinkle with powdered sugar if desired.")
+
+(def labels ["breakfast" "lunch" "dinner"])
+
+(classifier text labels)
+
+(require-python '[lime.lime_text :as lime])
+(require-python 'numpy)
+
+
+(def explainer (lime/LimeTextExplainer :class_names labels))
+
+
+(defn predict-probs
+  [text]
+  (let [result (classifier text labels)
+        result-scores (get result "scores")
+        result-labels (get result "labels")
+        result-map (zipmap result-labels result-scores)]
+    (mapv (fn [cn]
+            (get result-map cn))
+          labels)))
+
+
+(defn predict-texts
+  [texts]
+  (println "lime texts are " texts)
+  (numpy/array (mapv predict-probs texts)))
+
+
+(predict-texts [text])
+
+
+(def exp-result
+  (py/py. explainer "explain_instance" text predict-texts
+       :num_features 6
+       :num_samples 100))
+
+
+(py/py. exp-result "save_to_file" "explanation.html")
 ```
 
-If you don't fill in the :description with a short sentence, your project will be harder to find in search results, so start there. Be sure to fix the :url as well. At some point you'll need to flesh out the README.md file too, but for now let's skip ahead to setting :dependencies. Note that Clojure is just another dependency here. Unlike most languages, it's easy to swap out any version of Clojure.
+## shorturl
 
-## Dependencies
- 
-### Overview:
-Clojure is a hosted language and Clojure libraries are distributed the same way as in other JVM languages: as jar files.
-
-Jar files are basically just .zip files with a little extra JVM-specific metadata. They usually contain .class files (JVM bytecode) and .clj source files, but they can also contain other things like config files, JavaScript files or text files with static data.
-
-Published JVM libraries have identifiers (artifact group, artifact id) and versions based on Maven naming conventions.
-
-### Artifact IDs, Groups, and Versions:
-You can search [Clojars](https://clojars.org/search?q=clj-http) using its web interface or via `lein search $TERM`.
-
-```shell
-hamdi@hamdi-XPS-9320:~$ lein search clj-http
-Searching central ...
-[pro.juxt.clojars-mirrors.clj-http/clj-http "3.12.2"]
-Searching clojars ...
-[clj-http "3.12.3"]
-  A Clojure HTTP library wrapping the Apache HttpComponents client.
-[clj-http-fake "1.0.3"]
-  Helper for faking clj-http requests in testing, like Ruby's fakeweb.
-[org.sharetribe/aws-sig4 "0.1.4"]
-  Middleware to add AWS signature v4 signing to clj-http requests.
-[clj-oauth2 "0.2.0"]
-  clj-http and ring middlewares for OAuth 2.0
-[b-ryan/clj-http-mock "0.6.0"]
-  Mock responses to clj-http requests.
-[clj-http-hystrix "0.1.6"]
-  A Clojure library to wrap clj-http requests as hystrix commands
-[org.clj-commons/clj-http-lite "1.0.13"]
-  A lite version of clj-http that uses the jre's HttpURLConnection
-[martian-clj-http "0.1.17-SNAPSHOT"]
-  clj-http implementation for martian
-[stuarth/clj-oauth2 "0.3.2"]
-  clj-http and ring middlewares for OAuth 2.0
-[org.clojars.osbert/clj-oauth2 "0.1.9"]
-  clj-http and ring middlewares for OAuth 2.0
-[org.clojars.ub-hyleung/clj-http-mock "0.5.0"]
-  Mock responses to clj-http requests.
-[clj-http-mock "0.4.0"]
-  Mock responses to clj-http requests.
-[onaio/clj-oauth2 "0.3.2"]
-  clj-http and ring middlewares for OAuth 2.0
-[com.github.oliyh/martian-clj-http "0.1.22-SNAPSHOT"]
-  clj-http implementation for martian
-[wkf/clj-http "2.0.0"]
-  A Clojure HTTP library wrapping the Apache HttpComponents client.
-[com.gfredericks.forks.clj-http-fake/clj-http-fake "1.0.3-37e38b42"]
-  Helper for faking clj-http requests. For testing. You monster.
-[opentable/clj-http "3.0.0-beta-1"]
-  A Clojure HTTP library wrapping the Apache HttpComponents client.
-[twosigma/clj-http "3.9.1-ts2"]
-  A Clojure HTTP library wrapping the Apache HttpComponents client.
-[mavericklou/clj-oauth2 "0.5.2"]
-  clj-http and ring middlewares for OAuth 2.0
-[thirtyspokes/hindrance "1.1.0"]
-  A convenience wrapper for using OAuth JWT credentials flow with clj-http.
-[com.telenordigital.data-insights/clj-oauth2 "0.7.2"]
-  clj-http and ring middlewares for OAuth 2.0
-[racehub/clj-http "1.0.1"]
-  A Clojure HTTP library wrapping the Apache HttpComponents client.
-[com.farmlogs/looper "0.3.0"]
-  Drop-in clj-http replacement with retries
-[emil0r/clj-oauth2 "0.6.0"]
-  clj-http and ring middlewares for OAuth 2.0 [fork]
-hamdi@hamdi-XPS-9320:~$ 
-```
-On the Clojars page for clj-http at the time of this writing it shows this:
+In this project i try to build small micro-service that stor url in mysql db
+using those deps
 
 ```clojure
-[clj-http "3.12.3"]
+{:path ["src"]
+ :deps {org.clojure/clojure {:mvn/version "1.10.0"}
+        org.clojure/java.jdbc {:mvn/version "0.7.12"}
+        mysql/mysql-connector-java {:mvn/version "8.0.30"}
+        com.github.seancorfield/honeysql {:mvn/version "2.4.1002"}
+        javax.servlet/servlet-api {:mvn/version "2.5"}
+        ring/ring {:mvn/version "1.9.0"}
+        metosin/reitit {:mvn/version "0.5.12"}
+        metosin/muuntaja {:mvn/version "0.6.8"}}}
 ```
 
-It also shows the Maven and Gradle syntax for dependencies. You can copy the Leiningen version directly into the `:dependencies` vector in `project.clj`. So for instance, if you change the :dependencies line in the example `project.clj` above to
+## web-scraping
+
+In this project I tried to create web scraping script.
 
 ```clojure
- :dependencies [[org.clojure/clojure "1.11.1"]
-                [clj-http "3.12.3"]]
-```
-Leiningen will automatically download the clj-http jar file and make sure it is on your classpath. If you want to explicitly tell lein to download new dependencies, you can do so with `lein deps`, but it will happen on-demand if you don't.
+(ns core
+  (:require [clojure.xml :as xml]
+            [cache :as c]
+            [driver :as driver]
+            [etaoin.api :as e]
+            [clojure.data.json :refer [read-str]]
+            [somnium.congomongo :as m]))
 
-Within the vector, "clj-http" is referred to as the "artifact id". "2.0.0" is the version. Some libraries will also have "group ids", which are displayed like this:
+(defn parse-xml [url]
+  (try (xml/parse url)
+       (catch Exception e
+         (println
+          (str "Caught Exception parsing xml: " (.getMessage e))))))
 
-```[com.cedarsoft.utils.legacy/hibernate "1.3.7"]```
-
-The group id is the part before the slash. Especially for Java libraries, it's often a reversed domain name. Clojure libraries often use the same group-id and artifact-id (as with clj-http), in which case you can omit the group-id. If there is a library that's part of a larger group (such as ring-jetty-adapter being part of the ring project), the group-id is often the same across all the sub-projects.
-
-### Snapshot Versions
-
-
-Sometimes versions will end in "-SNAPSHOT". This means that it is not an official release but a development build. Relying on snapshot dependencies is discouraged but is sometimes necessary if you need bug fixes, etc. that have not made their way into a release yet. However, snapshot versions are not guaranteed to stick around, so it's important that non-development releases never depend upon snapshot versions that you don't control. Adding a snapshot dependency to your project will cause Leiningen to actively go seek out the latest version of the dependency daily (whereas normal release versions are cached in the local repository) so if you have a lot of snapshots it will slow things down.
-
-
-### Repositories
-
-Dependencies are stored in artifact repositories. If you are familiar with Perl's CPAN, Python's Cheeseshop (aka PyPi), Ruby's rubygems.org, or Node.js's NPM, it's the same thing. Leiningen reuses existing JVM repository infrastructure. There are several popular open source repositories. Leiningen by default will use two of them: `clojars.org` and `Maven Central`.
-
-`Clojars` is the Clojure community's centralized Maven repository, while Central is for the wider JVM community.
-
-You can add third-party repositories by setting the `:repositories` key in `project.clj`. See the [sample.project.clj](https://codeberg.org/leiningen/leiningen/src/stable/sample.project.clj) for examples on how to do so. This sample uses additional repositories such as the Sonatype repository which gives access to the latest SNAPSHOT development version of a library (Clojure or Java). It also contains other relevant settings regarding repositories such as update frequency.
-
-### Checkout Dependencies
-
-Sometimes it is necessary to develop two or more projects in parallel, the main project and its dependencies, but it is very inconvenient to run `lein install` and restart your repl all the time to get your changes picked up. Leiningen provides a solution called checkout dependencies (or just checkouts). To use it, create a directory called checkouts in the project root, like so:
-
-```
-my-stuff/
-│
-├── checkouts/    <--- here
-│
-├── doc/
-│   └── intro.md
-├── resources/
-├── src/
-│   └── my_stuff/
-│       └── core.clj
-├── test/
-│   └── my_stuff/
-│       └── core_test.clj
-├── CHANGELOG.md
-├── .gitignore
-├── .hgignore
-├── LICENSE
-├── project.clj
-└── README.md
-```
-
-Then, under the checkouts directory, create symlinks to the root directories of projects you need. The names of the symlinks don't matter: Leiningen just follows all of them to find project.clj files to use. Traditionally, they have the same name as the directory they point to.
-
-```
-my-stuff/
-├── checkouts/
-│   ├── commons -> [link to /code/company/commons]
-│   └── suchwow -> [link to /code/oss/suchwow]
-.
-```
+(comment
+  (parse-xml "https://bellroy.com/sitemap.xml"))
 
 
-## Running Code
+(defn get-content
+  [content]
+  (into {} (map (fn [c] [(:tag c) (first (:content c))]) (:content content))))
 
-Enough setup; let's see some code running. Start with a REPL (read-eval-print loop):
+(defn find-products
+  "Crawls the url's sitemap and for each product, will call f with the site and the product"
+  [site url f]
+  (let [p (parse-xml url)
+        tag (:tag p)]
+    (println (str "Parsing URL: " url " for site " site))
+    (if p
+      (cond
+        (= tag :urlset) (doseq [mm (map get-content (:content p))] (f site mm))
+        (= tag :sitemapindex) (let [ccs (map get-content (:content p))
+                                    pps (vec (map :loc ccs))]
+                                (doseq [mm pps] (find-products site mm f)))
+        :else (println "none"))
+      (println (str "Unable to process url for " site)))
+    (println "Done finding products")))
 
-```clojure
+(comment
+  (find-products "bellroy" "https://bellroy.com/sitemap.xml" println))
 
-  $ cd my-stuff
-  $ lein repl
-  nREPL server started on port 55568 on host 127.0.0.1 - nrepl://127.0.0.1:55568
-  REPL-y 0.5.1, nREPL 0.8.3
-  Clojure 1.10.1
-  OpenJDK 64-Bit Server VM 1.8.0_222-b10
-      Docs: (doc function-name-here)
-            (find-doc "part-of-name-here")
-    Source: (source function-name-here)
-  Javadoc: (javadoc java-object-or-class-here)
-      Exit: Control+D or (exit) or (quit)
-  Results: Stored in vars *1, *2, *3, an exception in *e
+(c/clear-site "bellroy") ;; Clear cache first
+(find-products "bellroy" "https://bellroy.com/sitemap.xml" c/product->cache)
+(c/get-count "bellroy")
 
-  my-stuff.core=>
+;; Popping product links example:
+(c/cache->product "bellroy")
+;; (c/cache->product "bellroy")
 
-```
+(def web-driver (driver/start false))
 
-The REPL is an interactive prompt where you can enter arbitrary code to run in the context of your project. Since we've added clj-http to `:dependencies` earlier, we are able to load it here along with code from the my-stuff.core namespace in your project's own src/ directory:
 
-```clojure
-  my-stuff.core=> (require 'my-stuff.core)
-  nil
-  my-stuff.core=> (my-stuff.core/-main)
-  Hello, World!
-  nil
-  my-stuff.core=> (require '[clj-http.client :as http])
-  nil
-  my-stuff.core=> (def response (http/get "https://leiningen.org"))
-  #'my-stuff.core/response
-  my-stuff.core=> (keys response)
-  (:status :headers :body :request-time :trace-redirects :orig-content-encoding)
-```
+;; Navigate to product url (loc key)
+(e/go web-driver (:loc (c/cache->product "bellroy")))
 
-The call to `-main` shows both println output ("Hello, World!") and the return value (nil) together.
+;; Query <script type="application/ld+json"> tags
+(def ld-json-query {:tag :script :type "application/ld+json"})
+(def ld-json-ids (e/query-all web-driver ld-json-query))
 
-Built-in documentation is available via doc, and you can examine the source of functions with source:
+;; Only two ld+json script tags-- get the content
+(read-str (e/get-element-inner-html-el web-driver (first ld-json-ids)))
+;; => {"@context" "https://schema.org", "@type" "BreadcrumbList" ...}
+(read-str (e/get-element-inner-html-el web-driver (last ld-json-ids)))
+;; => {"@context" "https://schema.org/", "@type" "product" ...}
 
-```clojure 
-my-stuff.core=> (source -main)
-(defn -main
-  "I don't do a whole lot ... yet."
-  [& args]
-  (println "Hello, World!"))
-nil
+(require '[clojure.string :refer [escape]])
 
-my-stuff.core=> ; use control+d to exit
+;; Remove '@' symbols and Build map 
+(def product-json
+  (read-str
+   (escape
+    (e/get-element-inner-html-el web-driver (last ld-json-ids))
+    {\@ ""})
+   :key-fn keyword))
+
+(println product-json)
+;; => {:context "https://schema.org/", :type "product", :brand "Bellroy" ...}
+
+(driver/quit web-driver)
+
+
+;; Mongo
+
+;; Products database
+(def mongo-conn
+  (m/make-connection
+   "products"
+   :instances [{:host "127.0.0.1" :port 27017}]))
+
+;; Set global connection
+(m/set-connection! mongo-conn)
+
+(println product-json)
+
+;; Add product offers to "bellroy" collection
+(m/mass-insert! "bellroy" [product-json])
+
+(m/close-connection mongo-conn)
+
 ```
 
+## timelib-app
 
-If you already have code in a -main function ready to go and don't need to enter code interactively, the run task is simpler:
+in this project i tried to test Clojure Java Interop
 
-```shell
-$ lein run
-Hello, World!
-```
+by calling java from clojure
 
-Providing a `-m` argument will tell Leiningen to look for the `-main` function in another namespace. Setting a default :main in project.clj lets you omit -m.
+## vid9
+XTDB history API - [Clojure Tutorial](https://www.youtube.com/watch?v=coNzTkrcAIc&t=11s)
 
-For `long-running` lein run processes, you may wish to save memory with the higher-order trampoline task, which allows the Leiningen JVM process to exit before launching your project's JVM.
+[XTDB](https://xtdb.com/) is a general-purpose bitemporal database for SQL, Datalog & graph queries.
 
-```shell
-$ lein trampoline run -m my-stuff.server 5000
-```
-If you have any Java to be compiled in :java-source-paths or Clojure namespaces listed in :aot, they will always be compiled before Leiningen runs any other code, via any run, repl, etc. invocations.
+## scratch
 
-### Tests
+Clojure tutorial - use an atom to make a run once function wrapper
+following this [tuto](https://www.youtube.com/watch?v=1zoNfM70cR0) that cover:
 
-We haven't written any tests yet, but we can run the failing tests included from the project template:
-
-```clojure
-$ lein test
-
-lein test my-stuff.core-test
-
-lein test :only my-stuff.core-test/a-test
-
-FAIL in (a-test) (core_test.clj:7)
-FIXME, I fail.
-expected: (= 0 1)
-  actual: (not (= 0 1))
-```
-Ran 1 tests containing 1 assertions.
-1 failures, 0 errors.
-Tests failed.
-Once we fill it in the test suite will become more useful. Sometimes if you've got a large test suite you'll want to run just one or two namespaces at a time; lein test my-stuff.core-test will do that. You also might want to break up your tests using test selectors; see lein help test for more details.
-
-Running lein test from the command-line is suitable for regression testing, but the slow startup time of the JVM makes it a poor fit for testing styles that require tighter feedback loops. In these cases, either keep a repl open for running the appropriate call to clojure.test/run-tests or look into editor integration such as clojure-test-mode.
-
-Keep in mind that while keeping a running process around is convenient, it's easy for that process to get into a state that doesn't reflect the files on disk: functions that are loaded and then deleted from the file will remain in memory, making it easy to miss problems arising from missing functions (often referred to as "getting slimed"). Because of this it's advised to do a lein test run with a fresh instance periodically in any case, perhaps before you commit.
-
+* clojure problem-solving.
+* creating good docstrings.
+* using atoms. 
+* and checking thread safety.
