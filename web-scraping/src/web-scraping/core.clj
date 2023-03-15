@@ -2,7 +2,9 @@
   (:require [clojure.xml :as xml]
             [cache :as c]
             [driver :as driver]
-            [etaoin.api :as e]))
+            [etaoin.api :as e]
+            [clojure.data.json :refer [read-str]]
+            [somnium.congomongo :as m]))
 
 (defn parse-xml [url]
   (try (xml/parse url)
@@ -53,15 +55,12 @@
 
 ;; Query <script type="application/ld+json"> tags
 (def ld-json-query {:tag :script :type "application/ld+json"})
-(def ld-json-ids (e/query-all driver ld-json-query))
-;; => ["c84039d5-8813-4c40-8d05-6a0e49938883" "15b1c505-a420-ed4f-96a9-e8758067535f"]
-
-(require '[clojure.data.json :refer [read-str]])
+(def ld-json-ids (e/query-all web-driver ld-json-query))
 
 ;; Only two ld+json script tags-- get the content
-(read-str (e/get-element-inner-html-el driver (first ld-json-ids)))
+(read-str (e/get-element-inner-html-el web-driver (first ld-json-ids)))
 ;; => {"@context" "https://schema.org", "@type" "BreadcrumbList" ...}
-(read-str (e/get-element-inner-html-el driver (last ld-json-ids)))
+(read-str (e/get-element-inner-html-el web-driver (last ld-json-ids)))
 ;; => {"@context" "https://schema.org/", "@type" "product" ...}
 
 (require '[clojure.string :refer [escape]])
@@ -70,7 +69,7 @@
 (def product-json
   (read-str
    (escape
-    (e/get-element-inner-html-el driver (last ld-json-ids))
+    (e/get-element-inner-html-el web-driver (last ld-json-ids))
     {\@ ""})
    :key-fn keyword))
 
@@ -81,7 +80,6 @@
 
 
 ;; Mongo
-(require '[somnium.congomongo :as m])
 
 ;; Products database
 (def mongo-conn
@@ -92,7 +90,9 @@
 ;; Set global connection
 (m/set-connection! mongo-conn)
 
+(println product-json)
+
 ;; Add product offers to "bellroy" collection
-(m/mass-insert! "bellroy" (:offers product-json))
+(m/mass-insert! "bellroy" [product-json])
 
-
+(m/close-connection mongo-conn)
